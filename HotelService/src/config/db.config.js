@@ -1,12 +1,13 @@
-import { dbConfig } from "./index";
+const { dbConfig } = require("./index");
+
 const config = {
   development: {
-    username: dbConfig.DB_USER, ,
+    username: dbConfig.DB_USER,
     password: dbConfig.DB_PASSWORD,
     database: dbConfig.DB_NAME,
     host: dbConfig.DB_HOST,
-    dialect: 'mysql'
+    dialect: "mysql"
   }
 };
 
-export default config;
+module.exports = config;
