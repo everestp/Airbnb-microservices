@@ -25,6 +25,8 @@ app.use('/api/v2', v2Router);
 
 app.use(appErrorHandler);
 app.use(genericErrorHandler);
+app.use('/api/v1', v1Router);
+app.use('/api/v2', v2Router); 
 
 
 app.listen(serverConfig.PORT,  async () => {
