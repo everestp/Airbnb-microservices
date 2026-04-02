@@ -6,6 +6,8 @@ import { appErrorHandler, genericErrorHandler } from './middlewares/error.middle
 import logger from './config/logger.config';
 import { attachCorrelationIdMiddleware } from './middlewares/correlation.middleware';
 import { setupMailerWorker } from './consumer/email.consumer';
+import { addEmailToQueue } from './produces/email.producer';
+// import { addEmailToQueue } from './produces/email.producer';
 const app = express();
 
 app.use(express.json());
@@ -32,4 +34,13 @@ app.listen(serverConfig.PORT, () => {
     logger.info(`Press Ctrl+C to stop the server.`);
     setupMailerWorker()
     logger.info("Mailer worker setup is completed")
+    addEmailToQueue({
+        to:"logcat99@gmail.com",
+        subject:"TEst email",
+        templateId:"welcome",
+        params:{
+            name:"Everest Paudel",
+            appName:"Booking.com"
+        }
+    })
 });
