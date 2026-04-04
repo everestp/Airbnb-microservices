@@ -17,12 +17,12 @@ type UserRepositoryImpl struct {
 	db *sql.DB
 }
 
-// DeleteByID implements [UserRepository].
+
 func (u *UserRepositoryImpl) DeleteByID(id int64) error {
 	panic("unimplemented")
 }
 
-// GetAll implements [UserRepository].
+
 func (u *UserRepositoryImpl) GetAll() ([]*models.User, error) {
 	panic("unimplemented")
 }

@@ -3,6 +3,7 @@ package services
 import (
 	db "AuthInGo/db/repositories"
 	"fmt"
+
 )
 
 
@@ -24,8 +25,10 @@ func NewUserService(_userRepository db.UserRepository) UserService{
 
 func (u *UserServiceImpl) GetUserByIDService() error{
 	fmt.Println("Fetching USer profile by ID   in user service")
-	if err := u.userRepository.GetByID(); err != nil{
+	  userData , err := u.userRepository.GetByID();
+	  if err != nil{
 		fmt.Println("Error")
 	}
+	fmt.Println("User",userData)
 return nil  ;
 }
