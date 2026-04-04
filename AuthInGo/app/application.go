@@ -2,7 +2,8 @@ package app
 
 import (
 	"AuthInGo/controllers"
-	db "AuthInGo/db/repositories"
+	repo "AuthInGo/db/repositories"
+	DBConfig "AuthInGo/config/db"
 	"AuthInGo/router"
 	"AuthInGo/services"
 	"fmt"
@@ -17,7 +18,7 @@ type Config struct {
 
 type Application struct {
 	Config Config
-	Store  db.Storage
+	
 }
 
 // Constructor for Config
@@ -31,12 +32,17 @@ func NewConfig(addr string) Config {
 func NewApplication(cfg Config) *Application {
 	return &Application{
 		Config: cfg,
-		Store: *db.NewStorage(),
+
 	}
 }
 
 func (app *Application) Run() error {
-	ur := db.NewUserRepository()
+	db ,err := DBConfig.SetupDB()
+	if err != nil{
+		fmt.Println("Error setup the database")
+		return err
+	}
+	ur := repo.NewUserRepository(db)
 	us :=services.NewUserService(ur)
 	uc := controllers.NewUserController(us)
 	uRouter := router.NewUserRouter(*uc)
