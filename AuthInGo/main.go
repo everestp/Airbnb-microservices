@@ -6,9 +6,10 @@ import (
 )
 
 func main() {
+
 	config.Load()
-   port := config.GetString("PORT",":3002")
-	cfg := app.NewConfig(port) // Set the server to listen on port 8080
+
+	cfg := app.NewConfig() // Set the server to listen on port 8080
 	app := app.NewApplication(cfg)
 
 	app.Run()

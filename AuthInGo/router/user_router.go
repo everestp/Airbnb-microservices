@@ -2,21 +2,23 @@ package router
 
 import (
 	"AuthInGo/controllers"
+	"AuthInGo/middlewares"
 
 	"github.com/go-chi/chi/v5"
 )
 
-
-type UserRouter struct{
-	UserController  *controllers.UserController
+type UserRouter struct {
+	userController *controllers.UserController
 }
 
-func NewUserRouter(_userControler controllers.UserController) Router {
-  return &UserRouter{
-	UserController: &_userControler,
-  }
+func NewUserRouter(_userController *controllers.UserController) Router {
+	return &UserRouter{
+		userController: _userController,
+	}
 }
 
-func (ur *UserRouter) Register(r chi.Router){
-	r.Post("/profile", ur.UserController.GetUserByIDHandler)
+func (ur *UserRouter) Register(r chi.Router) {
+	r.Get("/profile", ur.userController.GetUserById)
+	r.With(middlewares.UserCreateRequestValidator).Post("/signup", ur.userController.CreateUser)
+	r.With(middlewares.UserLoginRequestValidator).Post("/login", ur.userController.LoginUser)
 }

@@ -1,9 +1,10 @@
 package app
 
 import (
+	dbConfig "AuthInGo/config/db"
+	config "AuthInGo/config/env"
 	"AuthInGo/controllers"
 	repo "AuthInGo/db/repositories"
-	DBConfig "AuthInGo/config/db"
 	"AuthInGo/router"
 	"AuthInGo/services"
 	"fmt"
@@ -18,13 +19,15 @@ type Config struct {
 
 type Application struct {
 	Config Config
-	
 }
 
 // Constructor for Config
-func NewConfig(addr string) Config {
+func NewConfig() Config {
+
+	port := config.GetString("PORT", ":8080")
+
 	return Config{
-		Addr: addr,
+		Addr: port,
 	}
 }
 
@@ -32,25 +35,26 @@ func NewConfig(addr string) Config {
 func NewApplication(cfg Config) *Application {
 	return &Application{
 		Config: cfg,
-
 	}
 }
 
 func (app *Application) Run() error {
-	db ,err := DBConfig.SetupDB()
-	if err != nil{
-		fmt.Println("Error setup the database")
+
+	db, err := dbConfig.SetupDB()
+
+	if err != nil {
+		fmt.Println("Error setting up database:", err)
 		return err
 	}
-	ur := repo.NewUserRepository(db)
-	us :=services.NewUserService(ur)
-	uc := controllers.NewUserController(us)
-	uRouter := router.NewUserRouter(*uc)
 
+	ur := repo.NewUserRepository(db)
+	us := services.NewUserService(ur)
+	uc := controllers.NewUserController(us)
+	uRouter := router.NewUserRouter(uc)
 
 	server := &http.Server{
 		Addr:         app.Config.Addr,
-		Handler:      router.SetupRouter(uRouter),              // TODO: Setup a chi router and put it here
+		Handler:      router.SetupRouter(uRouter),
 		ReadTimeout:  10 * time.Second, // Set read timeout to 10 seconds
 		WriteTimeout: 10 * time.Second, // Set write timeout to 10 seconds
 	}
